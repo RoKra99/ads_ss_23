@@ -1,6 +1,7 @@
 #include <iostream>
 #include "rmq/implementation/naive.hpp"
 #include "rmq/implementation/nlogn.hpp"
+#include "pd/implementation/y_fast_trie.hpp"
 #include "utils.h"
 #include <chrono>
 
@@ -18,9 +19,22 @@ int main(int argn, char** argc) {
     output = argc[3];
     std::vector<ads_robert::Number> results;
     if (!mode.compare("pd")) {
-        // do pd stuff
+        auto t0 = std::chrono::high_resolution_clock::now();
+        ads_robert::PDInput pdInput = ads_robert::readPD(input);
+        ads_robert::YFastTrie yFastTrie(pdInput.numbers);
+        const std::size_t n_queries = pdInput.queries.size();
+        results.reserve(n_queries);
+        for (const auto& query : pdInput.queries) {
+            const auto res = yFastTrie.predecessor(query);
+            results.push_back(res);
+        }
+        auto t1 = std::chrono::high_resolution_clock::now();
+        auto time = std::chrono::duration_cast<std::chrono::microseconds>
+            (t1 - t0).count() / 1000.;
+        ads_robert::print_result(mode, time, yFastTrie.getSizeInBits());
+
+
     } else if (!mode.compare("rmq_naive")) {
-        // do rmd stuff
         auto t0 = std::chrono::high_resolution_clock::now();
         ads_robert::RMQInput rmqInput = ads_robert::readRMQ(input);
         ads_robert::NaiveRMQ naiveRMQ(rmqInput.numbers);
@@ -42,9 +56,7 @@ int main(int argn, char** argc) {
         const std::size_t n_queries = rmqInput.queries.size();
         results.reserve(n_queries);
         for (const auto& query : rmqInput.queries) {
-            // std::cout << query.s << ", "<<  query.e << std::endl;
             const auto res = nlognRMQ.rmq(query.s, query.e);
-            //std::cout << res << std::endl;
             results.push_back(res);
         }
         auto t1 = std::chrono::high_resolution_clock::now();
