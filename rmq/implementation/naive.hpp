@@ -37,6 +37,14 @@ public:
         return query_results[s][e - s];
     }
 
+    inline std::size_t getSizeInBits() const {
+        std::size_t result = 0;
+        for (const auto& inner : query_results) {
+            result += inner.size() * sizeof(Number);
+        }
+        return result * 8;
+    }
+
 private:
     const Number n;
     std::vector<std::vector<Number>> query_results;

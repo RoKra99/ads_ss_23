@@ -42,7 +42,7 @@ public:
 
     inline Number rmq(const Number s, const Number e) const {
         //std::cout << "rmq: " << s << ", " << e << std::endl;
-        if (s - e  < 2) {
+        if (s - e < 2) {
             return argmin(_input, s, e);
         }
         const Number l = std::max(1.0, std::log2(e - s - 1));
@@ -51,6 +51,14 @@ public:
         //std::cout << m1 << std::endl;
         const Number m2 = accessQuery(l - 1, e - (1 << (l - 1)));
         return argmin(_input, m1, m2);
+    }
+
+    inline std::size_t getSizeInBits() const {
+        std::size_t result = 0;
+        for (const auto& inner : query_results) {
+            result += inner.size() * sizeof(Number);
+        }
+        return result * 8;
     }
 private:
 
