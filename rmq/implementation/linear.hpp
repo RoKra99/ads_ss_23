@@ -79,7 +79,7 @@ public:
                 result += cartesian->getSizeInBits();
             }
         }
-        result += _B.getSizeInBits();
+        result += _B.getSizeInBits(true);
         return result;
     }
 private:

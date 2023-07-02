@@ -48,10 +48,13 @@ public:
         return argmin(_input, m1, m2);
     }
 
-    inline std::size_t getSizeInBits() const {
+    inline std::size_t getSizeInBits(bool addInput = false) const {
         std::size_t result = 0;
         for (const auto& inner : query_results) {
             result += inner.size() * sizeof(Number);
+        }
+        if (addInput){
+            result += _input.size() * sizeof(Number);
         }
         return result * 8;
     }
