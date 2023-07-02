@@ -1,6 +1,7 @@
 #include <iostream>
 #include "rmq/implementation/naive.hpp"
 #include "rmq/implementation/nlogn.hpp"
+#include "rmq/implementation/linear.hpp"
 #include "pd/implementation/y_fast_trie.hpp"
 #include "utils.h"
 #include <chrono>
@@ -49,10 +50,10 @@ int main(int argn, char** argc) {
             (t1 - t0).count() / 1000.;
         ads_robert::print_result(mode, time, naiveRMQ.getSizeInBits());
 
-    } else if (!mode.compare("rmq")) {
+    } else if (!mode.compare("rmq_nlogn")) {
         auto t0 = std::chrono::high_resolution_clock::now();
         ads_robert::RMQInput rmqInput = ads_robert::readRMQ(input);
-        ads_robert::NlogNRMQ nlognRMQ(rmqInput.numbers);
+        ads_robert::NlogNRMQ nlognRMQ(std::move(rmqInput.numbers));
         const std::size_t n_queries = rmqInput.queries.size();
         results.reserve(n_queries);
         for (const auto& query : rmqInput.queries) {
@@ -63,6 +64,20 @@ int main(int argn, char** argc) {
         auto time = std::chrono::duration_cast<std::chrono::microseconds>
             (t1 - t0).count() / 1000.;
         ads_robert::print_result(mode, time, nlognRMQ.getSizeInBits());
+    } else if (!mode.compare("rmq")) {
+        auto t0 = std::chrono::high_resolution_clock::now();
+        ads_robert::RMQInput rmqInput = ads_robert::readRMQ(input);
+        ads_robert::LinearRMQ linearRMQ(rmqInput.numbers);
+        const std::size_t n_queries = rmqInput.queries.size();
+        results.reserve(n_queries);
+        for (const auto& query : rmqInput.queries) {
+            const auto res = linearRMQ.rmq(query.s, query.e);
+            results.push_back(res);
+        }
+        auto t1 = std::chrono::high_resolution_clock::now();
+        auto time = std::chrono::duration_cast<std::chrono::microseconds>
+            (t1 - t0).count() / 1000.;
+        ads_robert::print_result(mode, time, linearRMQ.getSizeInBits());
     } else {
         std::cout << "Invalider Aufruf" << std::endl;
         std::cout << "Bitte mit folgendem Schema ausführen: './ads programm [pd|rmq] eingabe_datei ausgabe_datei'" << std::endl;

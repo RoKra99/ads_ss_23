@@ -13,24 +13,35 @@ public:
     NaiveRMQ(const std::vector<Number>& input) : n(input.size()) {
         const Number n = input.size();
         query_results.resize(n);
-        //std::size_t i = 0;
         for (Number s = 0; s < n; ++s) {
             auto& inner = query_results[s];
-            inner.reserve(n-s);
+            inner.reserve(n - s);
             for (Number e = s; e < n; ++e) {
                 if (s == e) {
                     inner.push_back(s);
                 } else {
-                    const Number prev_min = inner.size() > 0 ? inner[inner.size() -1] : s;
+                    const Number prev_min = inner.size() > 0 ? inner[inner.size() - 1] : s;
                     inner.push_back(argmin(input, prev_min, e));
                 }
-                // ++i;
-                // if (i % 1000000 == 0){
-                //     std::cout << "i: " << i << std::endl;
-                // }
             }
         }
-        //std::cout << "done" << std::endl;
+    }
+
+    NaiveRMQ(const std::vector<Number>::const_iterator& begin, const std::vector<Number>::const_iterator end) : n(end - begin) {
+        const Number n = end - begin;
+        query_results.resize(n);
+        for (Number s = 0; s < n; ++s) {
+            auto& inner = query_results[s];
+            inner.reserve(n - s);
+            for (Number e = s; e < n; ++e) {
+                if (s == e) {
+                    inner.push_back(s);
+                } else {
+                    const Number prev_min = inner.size() > 0 ? inner[inner.size() - 1] : s;
+                    inner.push_back(argmin(begin, prev_min, e));
+                }
+            }
+        }
     }
 
     inline Number rmq(const Number s, const Number e) const {
