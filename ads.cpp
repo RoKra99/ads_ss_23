@@ -2,6 +2,7 @@
 #include "rmq/implementation/naive.hpp"
 #include "rmq/implementation/nlogn.hpp"
 #include "rmq/implementation/linear.hpp"
+#include "pd/implementation/manual.hpp"
 #include "pd/implementation/y_fast_trie.hpp"
 #include "utils.h"
 #include <chrono>
@@ -34,6 +35,21 @@ int main(int argn, char** argc) {
             (t1 - t0).count() / 1000.;
         ads_robert::print_result(mode, time, yFastTrie.getSizeInBits());
 
+
+    } else if (!mode.compare("pd_manual")) {
+        auto t0 = std::chrono::high_resolution_clock::now();
+        ads_robert::PDInput pdInput = ads_robert::readPD(input);
+        ads_robert::ManualPD PD(pdInput.numbers);
+        const std::size_t n_queries = pdInput.queries.size();
+        results.reserve(n_queries);
+        for (const auto& query : pdInput.queries) {
+            const auto res = PD.predecessor(query);
+            results.push_back(res);
+        }
+        auto t1 = std::chrono::high_resolution_clock::now();
+        auto time = std::chrono::duration_cast<std::chrono::microseconds>
+            (t1 - t0).count() / 1000.;
+        ads_robert::print_result(mode, time, PD.getSizeInBits());
 
     } else if (!mode.compare("rmq_naive")) {
         auto t0 = std::chrono::high_resolution_clock::now();
@@ -78,7 +94,7 @@ int main(int argn, char** argc) {
         auto time = std::chrono::duration_cast<std::chrono::microseconds>
             (t1 - t0).count() / 1000.;
         ads_robert::print_result(mode, time, linearRMQ.getSizeInBits());
-    } else if (!mode.compare("manual")) {
+    } else if (!mode.compare("rmq_manual")) {
         auto t0 = std::chrono::high_resolution_clock::now();
         ads_robert::RMQInput rmqInput = ads_robert::readRMQ(input);
         const std::size_t n_queries = rmqInput.queries.size();
