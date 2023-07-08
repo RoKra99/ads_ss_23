@@ -78,6 +78,19 @@ int main(int argn, char** argc) {
         auto time = std::chrono::duration_cast<std::chrono::microseconds>
             (t1 - t0).count() / 1000.;
         ads_robert::print_result(mode, time, linearRMQ.getSizeInBits());
+    } else if (!mode.compare("manual")) {
+        auto t0 = std::chrono::high_resolution_clock::now();
+        ads_robert::RMQInput rmqInput = ads_robert::readRMQ(input);
+        const std::size_t n_queries = rmqInput.queries.size();
+        results.reserve(n_queries);
+        for (const auto& query : rmqInput.queries) {
+            const auto res = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
+            results.push_back(res);
+        }
+        auto t1 = std::chrono::high_resolution_clock::now();
+        auto time = std::chrono::duration_cast<std::chrono::microseconds>
+            (t1 - t0).count() / 1000.;
+        ads_robert::print_result(mode, time, 0);
     } else {
         std::cout << "Invalider Aufruf" << std::endl;
         std::cout << "Bitte mit folgendem Schema ausführen: './ads programm [pd|rmq] eingabe_datei ausgabe_datei'" << std::endl;

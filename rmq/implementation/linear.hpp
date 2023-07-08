@@ -64,8 +64,7 @@ public:
 
         } else {
             const auto result = partialBlockRmq(startBlock, s, e);
-            std::cout << result << std::endl;
-
+            //std::cout << result << std::endl;
             return result;
         }
     }
