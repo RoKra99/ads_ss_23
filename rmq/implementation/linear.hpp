@@ -32,7 +32,6 @@ public:
         _B(std::move(calculateBlockMinima(input))) {}
 
     inline Number rmq(const Number s, const Number e) const {
-        //std::cout << "s: " << s << ", e: " << e << ", _s: " << _s << ", _m: " << _m << std::endl;
         const Number startBlock = s / _s;
         const Number endBlock = e / _s;
         const bool wholeStart = (s % _s) == 0;
@@ -41,30 +40,22 @@ public:
         if (blockDiff) {
             const Number sWhole = wholeStart ? startBlock : startBlock + 1;
             const Number eWhole = wholeEnd ? endBlock : endBlock - 1;
-            //std::cout << sWhole << ", " << eWhole << std::endl;
-            //std::cout << _input.size() << std::endl;
             const Number minBlock = _B.rmq(sWhole, eWhole);
             const Number idxInMinBlock = _B_dash[minBlock];
             Number result = minBlock * _s + idxInMinBlock;
-            // std::cout << "minBlock: " << minBlock << ", idx: " << idxInMinBlock << std::endl;
-            // std::cout << result << std::endl;
             if (!wholeStart) {
                 result = argmin(_input, partialBlockRmq(startBlock, s, (startBlock + 1) * _s - 1), result);
-                // std::cout << result << std::endl;
             }
             if (!wholeEnd) {
                 result = argmin(_input, result, partialBlockRmq(endBlock, endBlock * _s, e));
-                // std::cout << result << std::endl;
             }
             return result;
         } else if (wholeStart && wholeEnd) {
             const auto result = startBlock * _s + _B_dash[startBlock];
-            // std::cout << result << std::endl;
             return result;
 
         } else {
             const auto result = partialBlockRmq(startBlock, s, e);
-            //std::cout << result << std::endl;
             return result;
         }
     }
@@ -95,13 +86,10 @@ private:
         mins.reserve(_m);
         _B_dash.reserve(_m);
         _cartesien_tree_identifiers.reserve(_m);
-        //std::cout << "start" << std::endl;
         for (std::size_t i = 0; i < input.size(); i += _s) {
             const std::size_t end = std::min(i + _s, _n);
 
-            //std::cout << "before calc " << i << ", " << _s << std::endl;
             const Identifier id = calculateCartesianIdentifier(input.begin() + i, input.begin() + end);
-            //std::cout << "aftercalc " << i << std::endl;
             if (_cartesian_solutions[id] == nullptr) {
                 _cartesian_solutions[id] = std::unique_ptr<NaiveRMQ>(new NaiveRMQ(input.begin() + i, input.begin() + end));
             }
@@ -109,29 +97,23 @@ private:
             const Number index = _cartesian_solutions[id]->rmq(0, _s - 1);
             _B_dash.push_back(index);
             mins.push_back(input[i + index]);
-            //std::cout << "id: " << id << ", index: " << index <<  ", minval: " << input[i + index] << std::endl;
         }
-        //std::cout << "done" << std::endl;
         return mins;
     }
 
     inline Identifier calculateCartesianIdentifier(const std::vector<Number>::const_iterator& begin, const std::vector<Number>::const_iterator end) {
-        //std::cout << "increaseing from " << std::endl;
 
         std::vector<Node> nodes(end - begin);
         auto it = begin;
         std::size_t i = 0;
         Node* root = &nodes[i];
-        // std::cout << "hi" << std::endl;
         nodes[i].value = *it;
-        // std::cout << "boy" << std::endl;
 
         nodes[i].parent = nullptr;
         nodes[i].left = nullptr;
         nodes[i].right = nullptr;
         ++it;
         ++i;
-        // std::cout << "increaseing from " << i << std::endl;
 
         for (; it != end; ++it) {
             nodes[i].value = *it;
@@ -151,7 +133,6 @@ private:
                 nodes[i].right = nullptr;
                 current->right = &nodes[i];
             }
-            // std::cout << "increaseing from " << i << std::endl;
             ++i;
         }
         // Go through in BFS order
