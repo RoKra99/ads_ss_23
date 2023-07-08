@@ -16,6 +16,13 @@ TEST(RMQClassTest, compare_naive) {
         const auto res_man = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
         ASSERT_EQ(res_ads, res_man);
     }
+
+    std::vector<ads_robert::RMQ> manual_queries = { {0, rmqInput.n - 1}, {0,0}, {rmqInput.n - 1, rmqInput.n - 1}, {0,1}, {rmqInput.n - 2, rmqInput.n - 1} };
+    for (const auto& query : manual_queries) {
+        const auto res_ads = RMQ.rmq(query.s, query.e);
+        const auto res_man = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
+        ASSERT_EQ(res_ads, res_man);
+    }
 }
 
 TEST(RMQClassTest, compare_log) {
@@ -28,6 +35,13 @@ TEST(RMQClassTest, compare_log) {
         const auto res_man = std::min_element(numbers.begin() + query.s, numbers.begin() + query.e + 1) - numbers.begin();
         ASSERT_EQ(res_ads, res_man);
     }
+
+    std::vector<ads_robert::RMQ> manual_queries = { {0, rmqInput.n - 1}, {0,0}, {rmqInput.n - 1, rmqInput.n - 1}, {0,1}, {rmqInput.n - 2, rmqInput.n - 1} };
+    for (const auto& query : manual_queries) {
+        const auto res_ads = RMQ.rmq(query.s, query.e);
+        const auto res_man = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
+        ASSERT_EQ(res_ads, res_man);
+    }
 }
 
 TEST(RMQClassTest, compare_linear) {
@@ -35,6 +49,13 @@ TEST(RMQClassTest, compare_linear) {
     ads_robert::LinearRMQ RMQ(rmqInput.numbers);
     const std::size_t n_queries = rmqInput.queries.size();
     for (const auto& query : rmqInput.queries) {
+        const auto res_ads = RMQ.rmq(query.s, query.e);
+        const auto res_man = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
+        ASSERT_EQ(res_ads, res_man);
+    }
+
+    std::vector<ads_robert::RMQ> manual_queries = { {0, rmqInput.n - 1}, {0,0}, {rmqInput.n - 1, rmqInput.n - 1}, {0,1}, {rmqInput.n - 2, rmqInput.n - 1} };
+    for (const auto& query : manual_queries) {
         const auto res_ads = RMQ.rmq(query.s, query.e);
         const auto res_man = std::min_element(rmqInput.numbers.begin() + query.s, rmqInput.numbers.begin() + query.e + 1) - rmqInput.numbers.begin();
         ASSERT_EQ(res_ads, res_man);

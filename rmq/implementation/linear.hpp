@@ -38,11 +38,14 @@ public:
         const bool wholeEnd = ((e + 1) % _s) == 0;
         const Number blockDiff = endBlock - startBlock;
         if (blockDiff) {
-            const Number sWhole = wholeStart ? startBlock : startBlock + 1;
-            const Number eWhole = wholeEnd ? endBlock : endBlock - 1;
-            const Number minBlock = _B.rmq(sWhole, eWhole);
-            const Number idxInMinBlock = _B_dash[minBlock];
-            Number result = minBlock * _s + idxInMinBlock;
+            Number result = s;
+            Number sWhole = wholeStart ? startBlock : startBlock + 1;
+            Number eWhole = wholeEnd ? endBlock : endBlock - 1;
+            if (sWhole <= eWhole) {
+                const Number minBlock = _B.rmq(sWhole, eWhole);
+                const Number idxInMinBlock = _B_dash[minBlock];
+                result = minBlock * _s + idxInMinBlock;
+            }
             if (!wholeStart) {
                 result = argmin(_input, partialBlockRmq(startBlock, s, (startBlock + 1) * _s - 1), result);
             }
@@ -88,7 +91,6 @@ private:
         _cartesien_tree_identifiers.reserve(_m);
         for (std::size_t i = 0; i < input.size(); i += _s) {
             const std::size_t end = std::min(i + _s, _n);
-
             const Identifier id = calculateCartesianIdentifier(input.begin() + i, input.begin() + end);
             if (_cartesian_solutions[id] == nullptr) {
                 _cartesian_solutions[id] = std::unique_ptr<NaiveRMQ>(new NaiveRMQ(input.begin() + i, input.begin() + end));
@@ -102,7 +104,6 @@ private:
     }
 
     inline Identifier calculateCartesianIdentifier(const std::vector<Number>::const_iterator& begin, const std::vector<Number>::const_iterator end) {
-
         std::vector<Node> nodes(end - begin);
         auto it = begin;
         std::size_t i = 0;
@@ -114,7 +115,6 @@ private:
         nodes[i].right = nullptr;
         ++it;
         ++i;
-
         for (; it != end; ++it) {
             nodes[i].value = *it;
             auto current = &nodes[i - 1];

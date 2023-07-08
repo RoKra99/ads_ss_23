@@ -22,7 +22,7 @@ if (NOT ${GTEST_ROOT} STREQUAL GTEST_ROOT-NOTFOUND)
 
     add_executable(rmq_test rmq/tests/test.cpp)
     target_include_directories(rmq_test PRIVATE .)
-    target_link_libraries(rmq_test gtest_main)
+    target_link_libraries(rmq_test gtest_main -fsanitize=leak -fsanitize=address -fsanitize=undefined)
 
     include(GoogleTest)
     gtest_discover_tests(rmq_test)
