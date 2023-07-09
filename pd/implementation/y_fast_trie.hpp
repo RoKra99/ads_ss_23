@@ -11,10 +11,10 @@ namespace ads_robert {
 class YFastTrie {
 
 public:
-    YFastTrie(const std::vector<Number>& input) : _input(input), _representatives(calculateRepresentatives(input)) {}
+    YFastTrie(const std::vector<Number>& input) : W(std::ceil(std::log2(input[input.size() - 1]))), _input(input), _representatives(calculateRepresentatives(input)) {}
 
     inline Number predecessor(const Number x) const {
-       // auto t0 = std::chrono::high_resolution_clock::now();
+        // auto t0 = std::chrono::high_resolution_clock::now();
 
         const std::size_t blockIndex = _representatives.predecessorIndex(x);
         // auto t1 = std::chrono::high_resolution_clock::now();
@@ -59,7 +59,7 @@ private:
         return repr;
     }
 private:
-    static const std::size_t W = 64;
+    const std::size_t W;
     const std::vector<Number>& _input;
     // choose minimum as repr, so that the predecessor query to the xFastTrie
     // dircetly returns the blockIndex we are looking for

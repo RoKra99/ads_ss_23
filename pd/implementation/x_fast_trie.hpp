@@ -4,6 +4,7 @@
 #include <array>
 #include <unordered_map>
 #include <chrono>
+#include <cmath>
 
 namespace ads_robert {
 
@@ -18,9 +19,9 @@ struct TrieNode {
 template<class HashMap>
 class XFastTrie {
 public:
-    XFastTrie(std::vector<Number>&& input) : _leaves(input) {
-        for (std::size_t i = 0; i < W + 1; ++i){
-            _hash_table[i].reserve(std::min(_leaves.size(),1UL << (63-1)));
+    XFastTrie(std::vector<Number>&& input) : W(std::ceil(std::log2(input[input.size() - 1]))), _hash_table(W + 1), _leaves(input) {
+        for (std::size_t i = 0; i < W + 1; ++i) {
+            _hash_table[i].reserve(std::min(_leaves.size(), 1UL << (W - i)));
         }
         for (std::size_t i = 0; i < _leaves.size(); ++i) {
             Number currentPrefix = _leaves[i];
@@ -57,6 +58,8 @@ public:
     }
 
     inline Number predecessor(const Number x) const {
+        const Number X = W < 64 ? std::min((1UL << W) - 1UL, x) : x;
+
         std::size_t low = W + 1;
         std::size_t high = 0;
         std::size_t middle;
@@ -65,7 +68,7 @@ public:
         std::size_t lvl = W;
         while (low - high > 1) {
             middle = (high + low) >> 1;
-            currentPrefix = x >> middle;
+            currentPrefix = X >> middle;
             auto it = _hash_table[middle].find(currentPrefix);
             if (it == _hash_table[middle].end()) {
                 high = middle;
@@ -83,7 +86,7 @@ public:
         const bool isOne = (x >> (lvl - 1)) & FIRST_DIGIT_MASK;
         if (isOne) {
             const auto min_right = found.min_right == NOT_SET ? std::min(found.max_left + 1, _leaves.size() - 1) : found.min_right;
-            if (x < _leaves[min_right]) {
+            if (X < _leaves[min_right]) {
                 return _leaves[min_right - 1];
             }
             return _leaves[min_right];
@@ -95,6 +98,7 @@ public:
 
     inline std::size_t predecessorIndex(const Number x) const {
         //auto t0 = std::chrono::high_resolution_clock::now();
+        const Number X = W < 64 ? std::min((1UL << W) - 1UL, x) : x;
 
         std::size_t low = W + 1;
         std::size_t high = 0;
@@ -104,7 +108,7 @@ public:
         std::size_t lvl = W;
         while (low - high > 1) {
             middle = (high + low) >> 1;
-            currentPrefix = x >> middle;
+            currentPrefix = X >> middle;
             auto it = _hash_table[middle].find(currentPrefix);
             if (it == _hash_table[middle].end()) {
                 high = middle;
@@ -125,7 +129,7 @@ public:
             // time_rest += time_r;
             return node.max_left + 1;
         }
-        const bool isOne = (x >> (lvl - 1)) & FIRST_DIGIT_MASK;
+        const bool isOne = (X >> (lvl - 1)) & FIRST_DIGIT_MASK;
         if (isOne) {
             const auto min_right = node.min_right == NOT_SET ? std::min(node.max_left + 1, _leaves.size() - 1) : node.min_right;
             if (x < _leaves[min_right]) {
@@ -156,7 +160,7 @@ public:
     inline std::size_t getSizeInBits() const {
         std::size_t result = 0;
         for (const auto& h : _hash_table) {
-            result += _leaves.size() * 2 * sizeof(*h.begin()) * 8;
+            result += h.size() * sizeof(*h.begin()) * 8;
         }
         result += _leaves.size() * sizeof(Number) * 8;
         return result;
@@ -166,9 +170,9 @@ public:
     //     std::cout << "Rest: " << (time_rest / 1000000.) << std::endl;
     // }
 private:
-    static const std::size_t W = 64;
+    const std::size_t W;
     static const std::size_t NOT_SET = std::numeric_limits<std::size_t>::max();
-    std::array<HashMap, W +1> _hash_table;
+    std::vector<HashMap> _hash_table;
     const std::vector<Number> _leaves;
     // int64_t time_hash;
     // int64_t time_rest;
