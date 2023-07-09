@@ -24,7 +24,7 @@ int main(int argn, char** argc) {
     if (!mode.compare("pd")) {
         auto t0 = std::chrono::high_resolution_clock::now();
         ads_robert::PDInput pdInput = ads_robert::readPD(input);
-        ads_robert::XFastTrie yFastTrie(pdInput.numbers);
+        ads_robert::YFastTrie yFastTrie(pdInput.numbers);
         const std::size_t n_queries = pdInput.queries.size();
         results.reserve(n_queries);
         for (const auto& query : pdInput.queries) {

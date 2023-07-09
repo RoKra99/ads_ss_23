@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "../util/io.h"
+#include "commandline.hpp"
 
 inline void write_results_to_file(const std::string& output, const  ads_robert::Number n, const std::vector< ads_robert::Number>& numbers, const std::vector<ads_robert::Number>& queries) {
     std::ofstream out(output);
@@ -18,11 +19,12 @@ inline void write_results_to_file(const std::string& output, const  ads_robert::
 }
 
 int main(int argn, char** argc) {
-    std::string output;
-    ads_robert::Number n, max;
-    n = std::atol(argc[1]);
-    output = argc[2];
-    max = std::atol(argc[3]);
+    CommandLine c(argn, argc);
+    ads_robert::Number n = c.intArg("-n", 10000);
+    ads_robert::Number max = c.intArg("-max", 0);
+    ads_robert::Number queryCount = c.intArg("-q", n);
+    std::string output = c.strArg("-out", "../pd/data/pd_n_" + std::to_string(n) + "_q_" + std::to_string(queryCount) + ".txt");
+
     max = max == 0 ? std::numeric_limits<ads_robert::Number>::max() : max;
     std::uniform_int_distribution<ads_robert::Number> dist(0, max);
     auto gen = std::mt19937_64{ 0 };
@@ -36,7 +38,7 @@ int main(int argn, char** argc) {
     }
     std::sort(numbers.begin(), numbers.end());
     std::uniform_int_distribution<ads_robert::Number> dist2(numbers[0], max);
-    for (ads_robert::Number i = 0; i < n; ++i) {
+    for (ads_robert::Number i = 0; i < queryCount; ++i) {
         queries.push_back(dist2(gen));
     }
     write_results_to_file(output, n, numbers, queries);

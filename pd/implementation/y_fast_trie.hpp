@@ -1,24 +1,71 @@
 #pragma once
 #include "../util/io.h"
+#include "x_fast_trie.hpp"
+#include "hash_b.h"
+
 #include <vector>
+#include <cmath>
+#include <chrono>
 
 namespace ads_robert {
 
 class YFastTrie {
 
-    public:
-        YFastTrie(const std::vector<Number>& input) {
-            
-        }
+public:
+    YFastTrie(const std::vector<Number>& input) : _input(input), _representatives(calculateRepresentatives(input)) {}
 
-        inline Number predecessor(const Number x) const {
-            return 0;
-        }
+    inline Number predecessor(const Number x) const {
+       // auto t0 = std::chrono::high_resolution_clock::now();
 
-        inline std::size_t getSizeInBits() const {
-            return 0;
-        }
-    private:
+        const std::size_t blockIndex = _representatives.predecessorIndex(x);
+        // auto t1 = std::chrono::high_resolution_clock::now();
 
+        const auto begin = _input.begin() + blockIndex * W;
+        const auto end = std::min(begin + W, _input.end());
+        const auto result = *(std::lower_bound(begin, end, x, [](Number a, Number b) {
+            return a <= b;
+        }) - 1);
+        // auto t2 = std::chrono::high_resolution_clock::now();
+
+        // auto time_x =
+        //     (t1 - t0).count();
+
+        // auto time_b =
+        //     (t2 - t1).count();
+
+        // time_xFast += time_x;
+        // time_block += time_b;
+        return result;
+    }
+
+    inline std::size_t getSizeInBits() const {
+        std::size_t result = 0;
+        result += _representatives.getSizeInBits();
+        return result;
+    }
+
+    // inline void printTimes() const {
+    //     std::cout << "XFAST: " << (time_xFast / 1000000.) << std::endl;
+    //     std::cout << "Block: " << (time_block / 1000000.) << std::endl;
+    //     _representatives.printTimes();
+    // }
+
+private:
+    std::vector<Number> calculateRepresentatives(const std::vector<Number>& input) const {
+        std::vector<Number> repr;
+        repr.reserve(std::ceil(input.size() / W));
+        for (std::size_t i = 0; i < input.size(); i += W) {
+            repr.push_back(input[i]);
+        }
+        return repr;
+    }
+private:
+    static const std::size_t W = 64;
+    const std::vector<Number>& _input;
+    // choose minimum as repr, so that the predecessor query to the xFastTrie
+    // dircetly returns the blockIndex we are looking for
+    const XFastTrie<HashB< Number, TrieNode, std::hash<Number>>> _representatives;
+    // int64_t time_xFast;
+    // int64_t time_block;
 };
 }

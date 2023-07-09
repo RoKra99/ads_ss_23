@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <unordered_map>
+#include <chrono>
 
 namespace ads_robert {
 
@@ -14,19 +15,16 @@ struct TrieNode {
     // indexin _leaves to minimum in right subtree (larger than searched element)
     std::size_t min_right;
 };
-
+template<class HashMap>
 class XFastTrie {
 public:
-    XFastTrie(const std::vector<Number>& input) : _leaves(input) {
-        for (auto a : _hash_table){
-            a.reserve(_leaves.size());
-        }
+    XFastTrie(std::vector<Number>&& input) : _hash_table(W + 1, HashMap(2 * input.size())), _leaves(input) {
         for (std::size_t i = 0; i < _leaves.size(); ++i) {
             Number currentPrefix = _leaves[i];
             std::size_t lvl = 1;
             // overflow is unrealisic because of memory constraints
             // underflow should not be a problem since it is not a valid request
-            _hash_table[0][currentPrefix] = { i - 1, i + 1 };
+            _hash_table[0].insert({ currentPrefix, { i - 1, i + 1 } });
             while (lvl != W + 1) {
                 bool goRight = currentPrefix & FIRST_DIGIT_MASK;
                 // if I am on the right choose me, if I am to the left choose me because I am predecessor
@@ -36,7 +34,7 @@ public:
                 currentPrefix >>= 1;
                 auto it = _hash_table[lvl].find(currentPrefix);
                 if (it == _hash_table[lvl].end()) {
-                    _hash_table[lvl][currentPrefix] = { max_left, min_right };
+                    _hash_table[lvl].insert({ currentPrefix, { max_left, min_right } });
                 } else if (goRight && (it->second.min_right > i || it->second.min_right == NOT_SET)) {
                     it->second.min_right = i;
                 } else if (!goRight && (it->second.max_left < i || it->second.min_right == NOT_SET)) {
@@ -72,6 +70,7 @@ public:
                 low = middle;
                 found = it->second;
                 lvl = middle;
+                //std::cout << "Found lvl: " << lvl << ", left: " << found.max_left << ", right: " << found.min_right << std::endl;
             }
         }
 
@@ -91,15 +90,84 @@ public:
         }
     }
 
-    inline std::size_t getSizeInBits() const {
-        return 0;
+    inline std::size_t predecessorIndex(const Number x) const {
+        //auto t0 = std::chrono::high_resolution_clock::now();
+
+        std::size_t low = W + 1;
+        std::size_t high = 0;
+        std::size_t middle;
+        Number currentPrefix;
+        auto found = _hash_table[W].find(0);
+        std::size_t lvl = W;
+        while (low - high > 1) {
+            middle = (high + low) >> 1;
+            currentPrefix = x >> middle;
+            auto it = _hash_table[middle].find(currentPrefix);
+            if (it == _hash_table[middle].end()) {
+                high = middle;
+            } else {
+                low = middle;
+                found = it;
+                lvl = middle;
+            }
+        }
+        //auto t1 = std::chrono::high_resolution_clock::now();
+
+        const auto& node = found->second;
+        if (lvl == 0) {
+            // auto t2 = std::chrono::high_resolution_clock::now();
+            // auto time_h = (t1 - t0).count();
+            // auto time_r = (t2 - t1).count();
+            // time_hash += time_h;
+            // time_rest += time_r;
+            return node.max_left + 1;
+        }
+        const bool isOne = (x >> (lvl - 1)) & FIRST_DIGIT_MASK;
+        if (isOne) {
+            const auto min_right = node.min_right == NOT_SET ? std::min(node.max_left + 1, _leaves.size() - 1) : node.min_right;
+            if (x < _leaves[min_right]) {
+                // auto t2 = std::chrono::high_resolution_clock::now();
+                // auto time_h = (t1 - t0).count();
+                // auto time_r = (t2 - t1).count();
+                // time_hash += time_h;
+                // time_rest += time_r;
+                return min_right - 1;
+            }
+            // auto t2 = std::chrono::high_resolution_clock::now();
+            // auto time_h = (t1 - t0).count();
+            // auto time_r = (t2 - t1).count();
+            // time_hash += time_h;
+            // time_rest += time_r;
+            return min_right;
+        } else {
+            const auto max_left = node.max_left == NOT_SET ? std::max(0UL, node.min_right - 1) : node.max_left;
+            // auto t2 = std::chrono::high_resolution_clock::now();
+            // auto time_h = (t1 - t0).count();
+            // auto time_r = (t2 - t1).count();
+            // time_hash += time_h;
+            // time_rest += time_r;
+            return max_left;
+        }
     }
+
+    inline std::size_t getSizeInBits() const {
+        std::size_t result = 0;
+        for (const auto& h : _hash_table) {
+            result += _leaves.size() * 2 * sizeof(*h.begin()) * 8;
+        }
+        result += _leaves.size() * sizeof(Number) * 8;
+        return result;
+    }
+    // inline void printTimes() const {
+    //     std::cout << "Hash: " << (time_hash/ 1000000.) << std::endl;
+    //     std::cout << "Rest: " << (time_rest / 1000000.) << std::endl;
+    // }
 private:
     static const std::size_t W = 64;
     static const std::size_t NOT_SET = std::numeric_limits<std::size_t>::max();
-    std::array<std::unordered_map< Number, TrieNode>, W + 1> _hash_table;
-    const std::vector<Number>& _leaves;
-
-
+    std::vector<HashMap> _hash_table;
+    const std::vector<Number> _leaves;
+    // int64_t time_hash;
+    // int64_t time_rest;
 };
 }
