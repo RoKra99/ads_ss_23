@@ -1,7 +1,6 @@
 #pragma once
 #include "../util/io.h"
 #include "x_fast_trie.hpp"
-#include "hash_b.h"
 
 #include <vector>
 #include <cmath>
@@ -64,7 +63,7 @@ private:
     const std::vector<Number>& _input;
     // choose minimum as repr, so that the predecessor query to the xFastTrie
     // dircetly returns the blockIndex we are looking for
-    const XFastTrie<HashB< Number, TrieNode, std::hash<Number>>> _representatives;
+    const XFastTrie<std::unordered_map< Number, TrieNode, std::hash<Number>>> _representatives;
     // int64_t time_xFast;
     // int64_t time_block;
 };

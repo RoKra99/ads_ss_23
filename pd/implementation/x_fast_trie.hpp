@@ -18,7 +18,10 @@ struct TrieNode {
 template<class HashMap>
 class XFastTrie {
 public:
-    XFastTrie(std::vector<Number>&& input) : _hash_table(W + 1, HashMap(2 * input.size())), _leaves(input) {
+    XFastTrie(std::vector<Number>&& input) : _leaves(input) {
+        for (std::size_t i = 0; i < W + 1; ++i){
+            _hash_table[i].reserve(std::min(_leaves.size(),1UL << (63-1)));
+        }
         for (std::size_t i = 0; i < _leaves.size(); ++i) {
             Number currentPrefix = _leaves[i];
             std::size_t lvl = 1;
@@ -165,7 +168,7 @@ public:
 private:
     static const std::size_t W = 64;
     static const std::size_t NOT_SET = std::numeric_limits<std::size_t>::max();
-    std::vector<HashMap> _hash_table;
+    std::array<HashMap, W +1> _hash_table;
     const std::vector<Number> _leaves;
     // int64_t time_hash;
     // int64_t time_rest;
