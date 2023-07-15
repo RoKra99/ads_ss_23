@@ -11,6 +11,9 @@ public:
     }
 
     inline Number predecessor(const Number x) const {
+        if (x < _input[0]){
+            return std::numeric_limits<Number>::max();
+        }
         return *(std::lower_bound(_input.begin(), _input.end(), x, [](Number a, Number b) {
             return a <= b;
         })-1);

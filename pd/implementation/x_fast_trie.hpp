@@ -58,6 +58,7 @@ public:
     }
 
     inline Number predecessor(const Number x) const {
+        if (x < _leaves[0]) return std::numeric_limits<Number>::max();
         const Number X = W < 64 ? std::min((1UL << W) - 1UL, x) : x;
 
         std::size_t low = W + 1;

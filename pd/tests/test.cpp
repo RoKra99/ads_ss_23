@@ -6,7 +6,7 @@
 #include "../util/io.h"
 
 
-const std::string input = "../pd/data/predecessor_example_3.txt";
+const std::string input = "../pd/data/predecessor_example_1.txt";
 
 
 
@@ -18,10 +18,6 @@ TEST(PDClassTest, compare_x) {
     ads_robert::XFastTrie<std::unordered_map<ads_robert::Number, ads_robert::TrieNode, std::hash<ads_robert::Number>>> PD(std::move(pdInput.numbers));
     const std::size_t n_queries = pdInput.queries.size();
     for (const auto& query : pdInput.queries) {
-        if (query < min) {
-            std::cout << "skipped " << query << std::endl;
-            continue;
-        }
         const auto res_ads = PD.predecessor(query);
         const auto res_man = manPD.predecessor(query);
         if (res_ads != res_man) {
@@ -29,7 +25,7 @@ TEST(PDClassTest, compare_x) {
         }
         ASSERT_EQ(res_ads, res_man);
     }
-    std::vector<ads_robert::Number> manual_queries = { min, max, std::numeric_limits<ads_robert::Number>::max() };
+    std::vector<ads_robert::Number> manual_queries = { 0, min, max, std::numeric_limits<ads_robert::Number>::max() };
     for (const auto& query : manual_queries) {
         const auto res_ads = PD.predecessor(query);
         const auto res_man = manPD.predecessor(query);
@@ -48,10 +44,6 @@ TEST(PDClassTest, compare_y) {
     ads_robert::YFastTrie PD(pdInput.numbers);
     const std::size_t n_queries = pdInput.queries.size();
     for (const auto& query : pdInput.queries) {
-        if (query < min) {
-            std::cout << "skipped " << query << std::endl;
-            continue;
-        }
         const auto res_ads = PD.predecessor(query);
         const auto res_man = manPD.predecessor(query);
         if (res_ads != res_man) {
@@ -59,7 +51,7 @@ TEST(PDClassTest, compare_y) {
         }
         ASSERT_EQ(res_ads, res_man);
     }
-    std::vector<ads_robert::Number> manual_queries = { min, max, std::numeric_limits<ads_robert::Number>::max() };
+    std::vector<ads_robert::Number> manual_queries = { 0, min, max, std::numeric_limits<ads_robert::Number>::max() };
     for (const auto& query : manual_queries) {
         const auto res_ads = PD.predecessor(query);
         const auto res_man = manPD.predecessor(query);
