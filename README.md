@@ -6,6 +6,7 @@ Project für Vorlesung "Fortgeschrittene Datenstrukturen" SS23
 
 - cmake Version >= 3.22
 - compiler supporting c++20
+- R (for creating plots)
 
 ### How to run:
 
@@ -17,8 +18,9 @@ Project für Vorlesung "Fortgeschrittene Datenstrukturen" SS23
 The tests compare the output of the implemented Data-structures/Algorithms to a straight forward algorithm preferrable using a standard library algorithm. For the predecessor queries the output is compared to "std::lower_bound" (see pd/implementation/manual.hpp). For the RMQ queries the output is compared to "std::min_element". To change the input for the test, change the input-variable at the top of the files and rebuild. Compare_naive is commented out since it consumes too much memory for the rmq_example_1.txt input, but it is indirectly tested through use in the other data structures. Alternatively you can generate a smaller test input to run the tests for the naive implementation.
 
 * build the projekt (see section above)
-* ./pd_test (for predecessor)
-* ./rmq_test (for range minimum queries)
+* navigate to build directory
+* run ./pd_test (for predecessor)
+* run ./rmq_test (for range minimum queries)
 
 ### How to generate test instances:
 
@@ -27,6 +29,23 @@ All parameters have default values. The default output writes to [pd|rmq]/data/ 
 * build the projekt (see section above)
 * ./generate_pd (-n länge_der_eingabe) (-out output_datei) (-q anzahl_der_queries) (-max log(max der eingabe))
 * ./generate_rmq (-n länge_der_eingabe) (-out output_datei) (-q anzahl_der_queries) (-max log(max der eingabe))
+
+### How to run benchmarks:
+
+* build the projekt
+* navigate to build directory
+* create the benchmark instances (see "Testinstances for evaluation")
+* run ./benchmark_linear
+* run ./benchmark_nlogn
+* run ./benchmark_x_fast_trie
+* run ./benchmark_y_fast_trie
+* run ./benchmark_manual
+
+### How to create plots:
+
+* run the benchmarks
+* create to directory "eval"
+* run Rscript make_plots.R
 
 ### Testinstances for evaluation:
 
