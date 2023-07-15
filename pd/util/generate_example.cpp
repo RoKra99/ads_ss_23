@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "../util/io.h"
-#include "commandline.hpp"
+#include "../../util/commandline.hpp"
 
 inline void write_results_to_file(const std::string& output, const  ads_robert::Number n, const std::vector< ads_robert::Number>& numbers, const std::vector<ads_robert::Number>& queries) {
     std::ofstream out(output);
@@ -20,9 +20,9 @@ inline void write_results_to_file(const std::string& output, const  ads_robert::
 
 int main(int argn, char** argc) {
     CommandLine c(argn, argc);
-    ads_robert::Number n = c.intArg("-n", 10000);
-    ads_robert::Number max = c.intArg("-max", 0);
-    ads_robert::Number queryCount = c.intArg("-q", n);
+    ads_robert::Number n = c.longArg("-n", 10000);
+    ads_robert::Number max = c.longArg("-max", 0);
+    ads_robert::Number queryCount = c.longArg("-q", n);
     std::string output = c.strArg("-out", "../pd/data/pd_n_" + std::to_string(n) + "_q_" + std::to_string(queryCount) + ".txt");
 
     max = max == 0 ? std::numeric_limits<ads_robert::Number>::max() : max;
