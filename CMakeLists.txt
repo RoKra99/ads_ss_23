@@ -51,3 +51,29 @@ if (NOT ${GTEST_ROOT} STREQUAL GTEST_ROOT-NOTFOUND)
     include(GoogleTest)
     gtest_discover_tests(pd_test)
 endif()
+
+# pd benchmarks
+set(PD_IMPLS "manual;x_fast_trie;y_fast_trie")
+foreach(impl ${PD_IMPLS})
+  string(TOUPPER ${impl} impl_uc)
+  add_executable(benchmark_${impl}  pd/tests/pd_benchmark.cpp
+                 pd/implementation/${impl}.hpp)
+  target_include_directories(benchmark_${impl}  PRIVATE .)
+  target_compile_definitions(benchmark_${impl}  PRIVATE -D ${impl_uc})
+  target_compile_features(benchmark_${impl} PUBLIC cxx_std_20)
+  target_compile_options(benchmark_${impl}  PUBLIC -Wall -Wextra -Wpedantic -O3 -g -march=native)
+  target_link_libraries(benchmark_${impl}  PRIVATE)
+endforeach()
+
+#rmq benchmarks
+set(RMQ_IMPLS "nlogn;linear")
+foreach(impl ${RMQ_IMPLS})
+  string(TOUPPER ${impl} impl_uc)
+  add_executable(benchmark_${impl}  rmq/tests/rmq_benchmark.cpp
+                 rmq/implementation/${impl}.hpp)
+  target_include_directories(benchmark_${impl}  PRIVATE .)
+  target_compile_definitions(benchmark_${impl}  PRIVATE -D ${impl_uc})
+  target_compile_features(benchmark_${impl} PUBLIC cxx_std_20)
+  target_compile_options(benchmark_${impl}  PUBLIC -Wall -Wextra -Wpedantic -O3 -g -march=native)
+  target_link_libraries(benchmark_${impl}  PRIVATE)
+endforeach()

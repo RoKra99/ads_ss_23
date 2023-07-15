@@ -63,7 +63,7 @@ public:
         }
     }
 
-    inline std::size_t getSizeInBits() const {
+    inline std::size_t getSizeInBits(bool includeInput = false) const {
         std::size_t result = 0;
         result += _B_dash.size() * sizeof(Number) * 8;
         result += _cartesien_tree_identifiers.size() * sizeof(Identifier) * 8;
@@ -71,6 +71,9 @@ public:
             if (cartesian != nullptr) {
                 result += cartesian->getSizeInBits();
             }
+        }
+        if (includeInput){
+            result += _input.size() * sizeof(Number) * 8;
         }
         result += _B.getSizeInBits(true);
         return result;

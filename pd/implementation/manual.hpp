@@ -19,7 +19,7 @@ public:
         })-1);
     }
 
-    inline std::size_t getSizeInBits() const {
+    inline std::size_t getSizeInBits(bool includeInput = false) const {
         return 0;
     }
 private:

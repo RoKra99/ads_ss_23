@@ -158,12 +158,14 @@ public:
         }
     }
 
-    inline std::size_t getSizeInBits() const {
+    inline std::size_t getSizeInBits(bool includeInput = true) const {
         std::size_t result = 0;
         for (const auto& h : _hash_table) {
             result += h.size() * sizeof(*h.begin()) * 8;
         }
-        result += _leaves.size() * sizeof(Number) * 8;
+        if (includeInput) {
+            result += _leaves.size() * sizeof(Number) * 8;
+        }
         return result;
     }
     // inline void printTimes() const {

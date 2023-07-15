@@ -28,40 +28,37 @@ All parameters have default values. The default output writes to [pd|rmq]/data/ 
 * ./generate_pd (-n länge_der_eingabe) (-out output_datei) (-q anzahl_der_queries) (-max log(max der eingabe))
 * ./generate_rmq (-n länge_der_eingabe) (-out output_datei) (-q anzahl_der_queries) (-max log(max der eingabe))
 
-
 ### Testinstances for evaluation:
 
 ###### Increasing input size (PD)
 
-* ./generate_pd -n 1000000
-* ./generate_pd -n 2000000
-* ./generate_pd -n 4000000
-* ./generate_pd -n 8000000
+* ./generate_pd -n 1000000 -q 1000000
+* ./generate_pd -n 2000000 -q 1000000
+* ./generate_pd -n 4000000 -q 1000000
+* ./generate_pd -n 8000000 -q 1000000
 
 As one command:
 
-./generate_pd -n 1000000 && ./generate_pd -n 2000000 &&./generate_pd -n 4000000 && ./generate_pd -n 8000000
+./generate_pd -n 1000000 -q 1000000 && ./generate_pd -n 2000000 -q 1000000 && ./generate_pd -n 4000000 -q 1000000 && ./generate_pd -n 8000000 -q 1000000
 
 ###### Increasing  maximum number (PD)
 
-* ./generate_pd -n 8000000 -max 56
-* ./generate_pd -n 8000000 -max 48
-* ./generate_pd -n 8000000 -max 40
-* ./generate_pd -n 8000000 -max 32
+* ./generate_pd -n 8000000 -q 1000000 -max 56
+* ./generate_pd -n 8000000 -q 1000000 -max 48
+* ./generate_pd -n 8000000 -q 1000000 -max 40
+* ./generate_pd -n 8000000 -q 1000000 -max 32
 
 As one command:
 
-./generate_pd -n 8000000 -max 56 && ./generate_pd -n 8000000 -max 48 && ./generate_pd -n 8000000 -max 40 && ./generate_pd -n 8000000 -max 32
+./generate_pd -n 8000000 -q 1000000 -max 56 && ./generate_pd -n 8000000 -q 1000000 -max 48 && ./generate_pd -n 8000000 -q 1000000 -max 40 && ./generate_pd -n 8000000 -q 1000000 -max 32
 
 ###### Increasing input size (RMQ)
 
-* ./generate_rmq -n 250000
-* ./generate_rmq -n 500000
-* ./generate_rmq -n 1000000
-* ./generate_rmq -n 2000000
-* ./generate_rmq -n 4000000
-* ./generate_rmq -n 8000000
+* ./generate_rmq -n 1000000 -q 10000000
+* ./generate_rmq -n 2000000 -q 10000000
+* ./generate_rmq -n 4000000 -q 10000000
+* ./generate_rmq -n 8000000 -q 10000000
 
 As one command:
 
-./generate_rmq -n 250000 && ./generate_rmq -n 500000 && ./generate_rmq -n 1000000 && ./generate_rmq -n 2000000 && ./generate_rmq -n 4000000 && ./generate_rmq -n 8000000
+./generate_rmq -n 1000000 -q 10000000 && ./generate_rmq -n 2000000 -q 10000000 && ./generate_rmq -n 4000000 -q 10000000 && ./generate_rmq -n 8000000 -q 10000000

@@ -48,7 +48,7 @@ public:
         return query_results[s][e - s];
     }
 
-    inline std::size_t getSizeInBits() const {
+    inline std::size_t getSizeInBits(bool includeInput = false) const {
         std::size_t result = 0;
         for (const auto& inner : query_results) {
             result += inner.size() * sizeof(Number);
