@@ -21,11 +21,11 @@ inline void write_results_to_file(const std::string& output, const  ads_robert::
 int main(int argn, char** argc) {
     CommandLine c(argn, argc);
     ads_robert::Number n = c.longArg("-n", 10000);
-    ads_robert::Number max = c.longArg("-max", 0);
+    ads_robert::Number power = c.longArg("-max", 64);
     ads_robert::Number queryCount = c.longArg("-q", n);
-    std::string output = c.strArg("-out", "../rmq/data/rmq_n_" + std::to_string(n) + "_q_" + std::to_string(queryCount) + ".txt");
+    std::string output = c.strArg("-out", "../rmq/data/rmq_n_" + std::to_string(n) + "_q_" + std::to_string(queryCount) + "_p_" + std::to_string(power) + ".txt");
 
-    max = max == 0 ? std::numeric_limits<ads_robert::Number>::max() : max;
+    const ads_robert::Number max = 1 << (power - 1);
     std::uniform_int_distribution<ads_robert::Number> dist(0, max);
     auto gen = std::mt19937_64{ 0 };
 
