@@ -1,6 +1,6 @@
 # ads_ss_23
 
-Project für Vorlesung "Fortgeschrittene Datenstrukturen" SS23
+Project for lecture "Fortgeschrittene Datenstrukturen" at KIT SS23
 
 ### Requirements:
 
