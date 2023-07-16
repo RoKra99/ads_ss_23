@@ -50,31 +50,31 @@ options(scipen=999)
 
 # PD 
 df = data_pd[(data_pd$max == 64),]
-plot(df, df$input, df$time, color_vec_pd) + labs(title = 'Laufzeit 1Mio Queries ',  x = 'Eingabegröße [Mio]', y = 'Zeit [ms] ', color = 'Algorithm')
-plot_log(df, df$input, df$time, color_vec_pd) + labs(title = 'Laufzeit 1Mio Queries (Logplot)',  x = 'Eingabegröße in Mio', y = 'Zeit [ms] (log)', color = 'Algorithm')
+plot(df, df$input, df$time, color_vec_pd) + labs(title = 'Cumulative Running Time for  1M Queries',  x = 'n [Million]', y = 'time [ms] ', color = 'Algorithm')
+plot_log(df, df$input, df$time, color_vec_pd) + labs(title = 'Cumulative Running Time for  1M  Queries (Logplot)',  x = 'n in Million', y = 'time [ms] (log)', color = 'Algorithm')
 
-plot(df, df$input, df$constr, color_vec_pd) + labs(title = 'Initialisierungszeit',  x = 'Eingabegröße  [Mio]', y = 'Zeit [ms] ', color = 'Algorithm')
-plot_log(df, df$input, df$constr, color_vec_pd) + labs(title = 'Initialisierungszeit (Logplot)',  x = 'Eingabegröße in Mio', y = 'Zeit [ms] (log)', color = 'Algorithm')
+plot(df, df$input, df$constr, color_vec_pd) + labs(title = 'Construction Time',  x = 'n  [Million]', y = 'time [ms] ', color = 'Algorithm')
+plot_log(df, df$input, df$constr, color_vec_pd) + labs(title = 'Construction Time (Logplot)',  x = 'n in Million', y = 'time [ms] (log)', color = 'Algorithm')
 
-plot(df, df$input, df$memory / 8000000, color_vec_pd) + labs(title = 'Speicherplatzverbrauch',  x = 'Eingabegröße  [Mio]', y = 'Speicherplatz [bit/Zahl] ', color = 'Algorithm')
-plot_log(df, df$input, df$memory / 8000000, color_vec_pd) + labs(title = 'Speicherplatzverbrauch (Logplot)',  x = 'Eingabegröße  [Mio]', y = 'Speicherplatz [bit/Zahl] (log) ', color = 'Algorithm')
+plot(df, df$input, df$memory / df$input / 1000000, color_vec_pd) + labs(title = 'Speicherplatzverbrauch',  x = 'n  [Million]', y = 'memory [bit/Zahl] ', color = 'Algorithm')
+plot_log(df, df$input, df$memory / df$input / 1000000, color_vec_pd) + labs(title = 'Speicherplatzverbrauch (Logplot)',  x = 'n  [Million]', y = 'memory [bit/number] (log) ', color = 'Algorithm')
 
 df = data_pd[(data_pd$input == 8),]
-plot(df, df$max, df$time, color_vec_pd) + labs(title = 'Laufzeit abhängig von maximaler Eingabe (1 Mio Queries, 8 Mio Eingabewerte) ',  x = 'Max Eingabe (log)', y = 'Zeit [ms] ', color = 'Algorithm')
-plot(df, df$max, df$memory / 8000000, color_vec_pd) + labs(title = 'Speicherplatz abhängig von maximaler Eingabe (1 Mio Queries, 8 Mio Eingabewerte) ',  x = 'Max Eingabe (log)', y = 'Speicherplatz [bit] ', color = 'Algorithm')
+plot(df, df$max, df$time, color_vec_pd) + labs(title = 'Memory relative to maximmum Input (1 Million Queries, n= 8 Million) ',  x = 'Largest Input (log)', y = 'time [ms] ', color = 'Algorithm')
+plot(df, df$max, df$memory / 8000000, color_vec_pd) + labs(title = 'Memory relative to maximmum Input (1 Million Queries, n = 8 Million) ',  x = 'Largest Input (log)', y = 'memory [bit/number] ', color = 'Algorithm')
 
 
 # RMQ
 
 df = data_rmq[(data_rmq$max == 64),]
 print(df)
-plot(df, df$input, df$time, color_vec_rmq) + labs(title = 'Laufzeit 10Mio Queries ',  x = 'Eingabegröße [Mio]', y = 'Zeit [ms] ', color = 'Algorithm')
+plot(df, df$input, df$time, color_vec_rmq) + labs(title = 'Cumulative Running Time for  10 Million Queries',  x = 'n [Million]', y = 'time [ms] ', color = 'Algorithm')
 
-plot(df, df$input, df$constr, color_vec_rmq) + labs(title = 'Initialisierungszeit',  x = 'Eingabegröße  [Mio]', y = 'Zeit [ms] ', color = 'Algorithm')
-plot_log(df, df$input, df$constr, color_vec_rmq) + labs(title = 'Initialisierungszeit (Logplot)',  x = 'Eingabegröße in Mio', y = 'Zeit [ms] (log)', color = 'Algorithm')
+plot(df, df$input, df$constr, color_vec_rmq) + labs(title = 'Construction Time',  x = 'n  [Million]', y = 'time [ms] ', color = 'Algorithm')
+plot_log(df, df$input, df$constr, color_vec_rmq) + labs(title = 'Construction Time (Logplot)',  x = 'n in Million', y = 'time [ms] (log)', color = 'Algorithm')
 
-plot(df, df$input, df$memory / 8000000, color_vec_rmq) + labs(title = 'Speicherplatzverbrauch',  x = 'Eingabegröße  [Mio]', y = 'Speicherplatz [bit/Zahl] ', color = 'Algorithm')
-plot_log(df, df$input, df$memory / 8000000, color_vec_rmq) + labs(title = 'Speicherplatzverbrauch (Logplot)',  x = 'Eingabegröße  [Mio]', y = 'Speicherplatz [bit/Zahl] (log) ', color = 'Algorithm')
+plot(df, df$input, df$memory / df$input / 1000000, color_vec_rmq) + labs(title = 'Memory Usage',  x = 'n  [Million]', y = 'memory [bit/number] ', color = 'Algorithm')
+plot_log(df, df$input, df$memory / df$input / 1000000, color_vec_rmq) + labs(title = 'Memory Usage (Logplot)',  x = 'n  [Million]', y = 'memory [bit/number] (log) ', color = 'Algorithm')
 
 
 # Closes the PDF
