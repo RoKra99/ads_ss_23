@@ -19,6 +19,7 @@ The tests compare the output of the implemented Data-structures/Algorithms to a 
 
 * build the projekt (see section above)
 * navigate to build directory
+* add predecessor_example_1.txt to pd/data (test instance for pd)
 * run ./generate_rmq -n 10000 (test instance for rmq)
 * run ./pd_test (for predecessor)
 * run ./rmq_test (for range minimum queries)
