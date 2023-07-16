@@ -77,7 +77,6 @@ public:
                 low = middle;
                 found = it->second;
                 lvl = middle;
-                //std::cout << "Found lvl: " << lvl << ", left: " << found.max_left << ", right: " << found.min_right << std::endl;
             }
         }
 
@@ -119,41 +118,20 @@ public:
                 lvl = middle;
             }
         }
-        //auto t1 = std::chrono::high_resolution_clock::now();
 
         const auto& node = found->second;
         if (lvl == 0) {
-            // auto t2 = std::chrono::high_resolution_clock::now();
-            // auto time_h = (t1 - t0).count();
-            // auto time_r = (t2 - t1).count();
-            // time_hash += time_h;
-            // time_rest += time_r;
             return node.max_left + 1;
         }
         const bool isOne = (X >> (lvl - 1)) & FIRST_DIGIT_MASK;
         if (isOne) {
             const auto min_right = node.min_right == NOT_SET ? std::min(node.max_left + 1, _leaves.size() - 1) : node.min_right;
             if (x < _leaves[min_right]) {
-                // auto t2 = std::chrono::high_resolution_clock::now();
-                // auto time_h = (t1 - t0).count();
-                // auto time_r = (t2 - t1).count();
-                // time_hash += time_h;
-                // time_rest += time_r;
                 return min_right - 1;
             }
-            // auto t2 = std::chrono::high_resolution_clock::now();
-            // auto time_h = (t1 - t0).count();
-            // auto time_r = (t2 - t1).count();
-            // time_hash += time_h;
-            // time_rest += time_r;
             return min_right;
         } else {
             const auto max_left = node.max_left == NOT_SET ? std::max(0UL, node.min_right - 1) : node.max_left;
-            // auto t2 = std::chrono::high_resolution_clock::now();
-            // auto time_h = (t1 - t0).count();
-            // auto time_r = (t2 - t1).count();
-            // time_hash += time_h;
-            // time_rest += time_r;
             return max_left;
         }
     }
@@ -168,16 +146,10 @@ public:
         }
         return result;
     }
-    // inline void printTimes() const {
-    //     std::cout << "Hash: " << (time_hash/ 1000000.) << std::endl;
-    //     std::cout << "Rest: " << (time_rest / 1000000.) << std::endl;
-    // }
 private:
     const std::size_t W;
     static const std::size_t NOT_SET = std::numeric_limits<std::size_t>::max();
     std::vector<HashMap> _hash_table;
     const std::vector<Number> _leaves;
-    // int64_t time_hash;
-    // int64_t time_rest;
 };
 }
