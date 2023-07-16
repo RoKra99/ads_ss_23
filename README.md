@@ -15,10 +15,11 @@ Project für Vorlesung "Fortgeschrittene Datenstrukturen" SS23
 
 ### How to run tests:
 
-The tests compare the output of the implemented Data-structures/Algorithms to a straight forward algorithm preferrable using a standard library algorithm. For the predecessor queries the output is compared to "std::lower_bound" (see pd/implementation/manual.hpp). For the RMQ queries the output is compared to "std::min_element". To change the input for the test, change the input-variable at the top of the files and rebuild. Compare_naive is commented out since it consumes too much memory for the rmq_example_1.txt input, but it is indirectly tested through use in the other data structures. Alternatively you can generate a smaller test input to run the tests for the naive implementation.
+The tests compare the output of the implemented Data-structures/Algorithms to a straight forward algorithm preferrable using a standard library algorithm. For the predecessor queries the output is compared to "std::lower_bound" (see pd/implementation/manual.hpp). For the RMQ queries the output is compared to "std::min_element". To change the input for the test, change the input-variable at the top of the files and rebuild. Alternatively you can generate a smaller test input to run the tests for the naive implementation. I am using a smaller test instance for rmq, since the naive approach conusmes, too much memory for larger inputs. Additionaly "std::min_element" is very slow.
 
 * build the projekt (see section above)
 * navigate to build directory
+* run ./generate_rmq -n 10000 (test instance for rmq)
 * run ./pd_test (for predecessor)
 * run ./rmq_test (for range minimum queries)
 
